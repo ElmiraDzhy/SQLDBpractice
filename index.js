@@ -1,47 +1,22 @@
 const {getUsers} = require('./api/getUsers');
-const {User, client} = require('./models');
+const {User, client, Phone, Order} = require('./models');
+const {generatePhones} = require('./utils/generateProducts');
+
 
 async function connection () {
-// make connection to db
+    // make connection to db
     await client.connect();
-    //
-    const users = await getUsers();
-    // all users
-    const res = await User.bulkCreate(users);
-    //
+
+    const userArray = await getUsers();
+    const {rows: users} = await User.bulkCreate(userArray);
+    const {rows: phones} = await Phone.bulkCreate(generatePhones());
+    const {rows: orders} = await Order.bulkCreate(users, phones);
     // close connection
     await client.end();
 }
 
 connection();
 
-// const users = [
-//     {
-//         firstName: 'Harry',
-//         lastName: 'Potter',
-//         email: 'potternew@gmail.com',
-//         birthday: '2007-08-08',
-//         isSubscribe: false,
-//     }, {
-//         firstName: 'Ron',
-//         lastName: 'Uizli',
-//         email: 'uizli@gmail.com',
-//         birthday: '2007-08-08',
-//         isSubscribe: false,
-//     }, {
-//         firstName: 'Germoina',
-//         lastName: 'Granger',
-//         email: 'granger@gmail.com',
-//         birthday: '2007-08-08',
-//         isSubscribe: false,
-//     }, {
-//         firstName: 'Drako',
-//         lastName: 'Malfoy',
-//         email: 'malfoy@gmail.com',
-//         birthday: '2007-08-08',
-//         isSubscribe: false,
-//     },
-//
-// ]
+
 
 
