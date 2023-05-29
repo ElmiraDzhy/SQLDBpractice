@@ -1,23 +1,14 @@
-const {Client} = require('pg');
-const {mapUsers} = require('./utils/mapUser');
-const {config} = require('./config');
 const {getUsers} = require('./api/getUsers');
+const {User, client} = require('./models');
 
-
-const client = new Client(config);
 async function connection () {
-    // make connection to db
+// make connection to db
     await client.connect();
     //
-
     const users = await getUsers();
-
-    const res = await client.query(`INSERT INTO users (first_name, last_name, email, birthday, is_subscribe, gender) VALUES ${mapUsers(users)}`); // instance of Result // Result.rows - array with
     // all users
-    console.log(res);
+    const res = await User.bulkCreate(users);
     //
-
-
     // close connection
     await client.end();
 }
