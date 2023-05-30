@@ -9,8 +9,9 @@ async function connection () {
 
     const userArray = await getUsers();
     const {rows: users} = await User.findAll(userArray);
-    const {rows: phones} = await Phone.bulkCreate(generatePhones());
+    const {rows: phones} = await Phone.findAll(generatePhones());
     const {rows: orders} = await Order.bulkCreate(users, phones);
+
     // close connection
     await client.end();
 }

@@ -6,12 +6,11 @@ class User {
 
     static async findAll () {
         return  this._client.query(`SELECT *
-                                   FROM ${this._tableName}`);
+                                   FROM ${this._tableName} WHERE id < 5`);
     }
 
     static async bulkCreate (users) {
-        return  this._client.query(`INSERT INTO users (first_name, last_name, email, birthday, is_subscribe, gender)
-        VALUES
+        return  this._client.query(`INSERT INTO ${this._tableName} (first_name, last_name, email, birthday, is_subscribe, gender) VALUES
         ${mapUsers(users)}`);
     }
 }

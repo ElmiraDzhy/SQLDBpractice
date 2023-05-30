@@ -17,7 +17,6 @@ class Phone {
         }) => `('${brand}', '${model}', ${price}, ${quantity}, '${category}')`).join(',');
         return this._client.query(`INSERT INTO ${this._tableName} (brand, model, price, quantity, category) VALUES ${valueStr} RETURNING *`);
 
-
     }
 }
 
