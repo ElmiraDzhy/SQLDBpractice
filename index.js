@@ -18,8 +18,15 @@ async function connection () {
     await client.end();
 }
 
-connection();
+// connection();
 
+async function updateHeight(){
+    await client.connect();
 
+    const res = await User.updateHeight();
 
+    await client.end();
+}
+
+updateHeight();
 

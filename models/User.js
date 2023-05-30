@@ -1,4 +1,7 @@
 const {mapUsers} = require("../utils/mapUser");
+const _ = require('lodash');
+const {getRandomHeight} = require('../utils/randomHeight');
+
 
 class User {
     static _client;
@@ -12,6 +15,12 @@ class User {
     static async bulkCreate (users) {
         return  this._client.query(`INSERT INTO ${this._tableName} (first_name, last_name, email, birthday, is_subscribe, gender) VALUES
         ${mapUsers(users)}`);
+    }
+
+    static async updateHeight(){
+        const {rows: usersID} = this._client.query(`SELECT id FROM users`);
+
+        this._client.query(`UPDATE ${this._tableName} SET height = ${getRandomHeight()} WHERE gender = 'male';`)
     }
 }
 
