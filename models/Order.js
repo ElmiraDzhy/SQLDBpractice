@@ -12,8 +12,7 @@ class Order {
                 .join(','))
             .join(',');
 
-        const {rows: orders} = await this._client.query(`INSERT INTO orders (customer_id)
-                                                         VALUES ${orderValueStr} RETURNING id`);
+        const {rows: orders} = await this._client.query(`INSERT INTO orders (customer_id) VALUES ${orderValueStr} RETURNING id`);
         // const {rows: orders} = await this._client.query(`SELECT * FROM orders`);
         const phonesToOrdersValueStr = orders.map(
             o => {
@@ -26,8 +25,7 @@ class Order {
             }
         ).join(',');
 
-        return this._client.query(`INSERT INTO products_to_orders (product_id, order_id, quantity)
-                                   VALUES ${phonesToOrdersValueStr};`)
+        return this._client.query(`INSERT INTO products_to_orders (product_id, order_id, quantity) VALUES ${phonesToOrdersValueStr};`)
 
     }
 }

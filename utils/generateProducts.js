@@ -8,11 +8,11 @@ const PHONES_BRANDS = [
     'Sony',
     'Alcatel',
     'Xiaomi',
-    'Realme',
+    'Realme'
 ];
 
 const getPhone = key => ({
-    brand: PHONES_BRANDS[_.random(0, PHONES_BRANDS.length, false)],
+    brand: PHONES_BRANDS[_.random(0, PHONES_BRANDS.length-1, false)],
     model: `model ${key}`,
     quantity: _.random(10, 1500, false),
     price: _.random(200, 15000, false),
