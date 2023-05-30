@@ -121,15 +121,59 @@ FROM users
 WHERE id BETWEEN 200 AND 250
   AND gender = 'male';
 
+--
+-- Search by schema
+--
 
+-- all users name started on 'K' letter
+SELECT *
+FROM users
+WHERE first_name LIKE 'K%';
 
+/*
+% - любое количество любых символов
+_ - любой символ
+*/
 
+-- all users name quantity 5 letters
+SELECT *
+FROM users
+WHERE first_name LIKE '_____';
 
+---------------------------------
 
+ALTER TABLE users
+    ADD COLUMN height numeric(3, 2);
 
+ALTER TABLE users
+    ADD COLUMN weight int;
 
+UPDATE users
+SET height = 1.90
+WHERE gender = 'female';
 
+UPDATE users
+SET height = 1.85
+WHERE id % 2 = 0;
 
+UPDATE users
+SET height = 1.75
+WHERE is_subscribe = true
+  AND gender = 'female';
+
+UPDATE users
+SET weight = 55
+WHERE gender = 'female';
+
+UPDATE users
+SET weight = 68
+WHERE gender = 'male';
+
+---------------------------------
+
+-- UPDATE employees
+-- SET salary = salary * 1.2
+-- WHEN work_hours >= 150
 
 
 
