@@ -18,9 +18,9 @@ class User {
     }
 
     static async updateHeight(){
-        const {rows: usersID} = this._client.query(`SELECT id FROM users`);
+        // const {rows: usersID} = this._client.query(`SELECT id FROM users`);
 
-        this._client.query(`UPDATE ${this._tableName} SET height = ${getRandomHeight()} WHERE gender = 'male';`)
+        await this._client.query(`UPDATE ${this._tableName} SET height = ${getRandomHeight()} WHERE gender = 'male'`);
     }
 }
 
