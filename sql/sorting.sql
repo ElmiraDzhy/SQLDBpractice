@@ -43,3 +43,18 @@ SELECT count(*), age
 FROM (SELECT extract(years from age(birthday)) AS age, * FROM users) AS u_w_a
 GROUP BY u_w_a.age
 ORDER BY u_w_a.age;
+
+-- get all users with max order quantity
+
+SELECT count(*) AS "c", customer_id
+FROM orders
+GROUP BY customer_id
+HAVING count(*) > 2
+ORDER BY c;
+
+---
+
+SELECT sum(quantity), brand
+FROM products
+GROUP BY brand
+HAVING sum(quantity) > 1000;
