@@ -28,3 +28,18 @@ SELECT price, brand
 FROM products
 ORDER BY price DESC
 LIMIT 5;
+
+SELECT first_name, last_name, birthday, extract(years from age(birthday)) AS "Y.O"
+FROM users
+ORDER BY age(birthday), first_name;
+
+--
+
+SELECT extract(years from age(birthday)) AS age, count(*)
+FROM users
+GROUP BY age;
+
+SELECT count(*), age
+FROM (SELECT extract(years from age(birthday)) AS age, * FROM users) AS u_w_a
+GROUP BY u_w_a.age
+ORDER BY u_w_a.age;
