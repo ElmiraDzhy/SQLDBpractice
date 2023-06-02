@@ -62,11 +62,41 @@ SELECT count(*)
 FROM users
 WHERE extract(year from birthday) > 1998;
 
-SELECT count(*), first_name
+SELECT count(*)
 FROM users
-WHERE first_name LIKE 'J%'
-GROUP BY first_name;
+WHERE first_name LIKE 'J%';
 
 SELECT count(*)
 FROM users
 WHERE extract(years from age(birthday)) BETWEEN 20 AND 30;
+--
+-- phones count that was
+SELECT sum(quantity)
+FROM products_to_orders;
+--
+-- practice #2
+
+SELECT sum(quantity)
+FROM products;
+
+SELECT avg(price)
+FROM products;
+
+SELECT avg(price), brand
+FROM products
+GROUP BY brand;
+
+SELECT count(model) AS "models", brand
+FROM products
+GROUP BY brand;
+
+SELECT avg(price)
+FROM products
+WHERE brand = 'Nokia';
+
+SELECT count(*), customer_id
+FROM orders
+GROUP BY customer_id;
+
+
+
