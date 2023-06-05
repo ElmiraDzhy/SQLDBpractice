@@ -122,3 +122,17 @@ FROM products_to_orders
          JOIN products ON products_to_orders.product_id = products.id
 ORDER BY maxprice DESC
 LIMIT 1;
+
+
+
+SELECT product_id, p.model
+FROM products_to_orders AS pto
+         JOIN products AS p on pto.product_id = p.id
+GROUP BY product_id, p.model;
+
+SELECT count(pto.order_id), p.id
+FROM products_to_orders AS pto
+         RIGHT JOIN products AS p
+              ON p.id = pto.product_id
+GROUP BY p.id
+ORDER BY p.id ;
