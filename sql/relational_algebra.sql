@@ -57,3 +57,14 @@ SELECT * FROM b;
 SELECT v FROM b
 EXCEPT
 SELECT v FROM a;
+
+-- get all users that have never made orders
+SELECT id FROM users
+EXCEPT
+SELECT customer_id FROM orders;
+
+-- get all users that made orders
+
+SELECT id FROM users
+INTERSECT
+SELECT customer_id FROM orders;
