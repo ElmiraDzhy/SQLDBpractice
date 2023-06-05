@@ -116,14 +116,6 @@ ORDER BY sales DESC
 LIMIT 5;
 
 
--- maxprice-order
-SELECT *, (products.price * products_to_orders.quantity) AS "maxprice"
-FROM products_to_orders
-         JOIN products ON products_to_orders.product_id = products.id
-ORDER BY maxprice DESC
-LIMIT 1;
-
-
 
 SELECT product_id, p.model
 FROM products_to_orders AS pto
@@ -133,6 +125,98 @@ GROUP BY product_id, p.model;
 SELECT count(pto.order_id), p.id
 FROM products_to_orders AS pto
          RIGHT JOIN products AS p
-              ON p.id = pto.product_id
+                    ON p.id = pto.product_id
 GROUP BY p.id
-ORDER BY p.id ;
+ORDER BY p.id;
+
+
+
+/*
+
+1. Извлечь самый дорогой заказ
+2. Извлечь топ покупателя (который больше всех потратил суммарно)
+3. Извлечь среднюю стоимость заказа
+4. Извлечь количество моделей конкретной марки
+5. Извлечь все позиции конкретного заказа
+6. Извлечь покупателя, который совершил больше всех заказов
+7. Извлечь все заказы и отсортировать по убыванию стоимости
+8. TOP 10 самых дорогих телефонов
+9. Пользователей и количество их заказов, отсортировать по кол-ву заказов
+10. TOP 10 самых популярных моделей
+*/
+
+
+-- 1
+SELECT products_to_orders.order_id, sum(products.price * products_to_orders.quantity) AS "maxprice"
+FROM products_to_orders
+         JOIN products ON products_to_orders.product_id = products.id
+GROUP BY products_to_orders.order_id
+ORDER BY maxprice DESC
+LIMIT 1;
+
+-- 2
+
+SELECT u.id, u.first_name, sum(pto.quantity * p.price) AS "summa"
+FROM users AS u
+         JOIN orders AS o ON o.customer_id = u.id
+         JOIN products_to_orders AS pto ON o.id = pto.order_id
+         JOIN products AS p ON pto.product_id = p.id
+GROUP BY u.id
+ORDER BY summa DESC
+LIMIT 1;
+
+-- 3
+SELECT avg(p.price * pto.quantity)
+FROM orders AS o
+         JOIN products_to_orders pto on o.id = pto.order_id
+         JOIN products p on p.id = pto.product_id;
+
+--4
+
+SELECT count(model)
+FROM products
+WHERE brand = 'Samsung';
+
+-- 5
+
+SELECT *
+FROM orders
+         JOIN products_to_orders pto on orders.id = pto.order_id
+         JOIN products p on p.id = pto.product_id
+WHERE pto.order_id = 15378;
+
+-- 6
+SELECT users.id, users.first_name, count(o.customer_id) AS "quantityOfOrders"
+FROM users
+         JOIN orders o on users.id = o.customer_id
+GROUP BY users.id
+ORDER BY "quantityOfOrders" DESC
+LIMIT 1;
+
+-- 7
+SELECT orders.id, (p.price * pto.quantity) AS "summa"
+FROM orders
+         JOIN products_to_orders pto on orders.id = pto.order_id
+         JOIN products p on p.id = pto.product_id
+GROUP BY orders.id, summa
+ORDER BY summa;
+
+-- 8
+SELECT price, model, brand
+FROM products
+ORDER BY price DESC
+LIMIT 10;
+
+-- 9
+SELECT u.id, u.first_name, count(o.customer_id) AS "ordersQuantity" FROM orders AS o
+JOIN users AS u ON u.id = o.customer_id
+GROUP BY u.id
+ORDER BY "ordersQuantity";
+
+-- 10
+
+SELECT model, count(model) AS "modelQuantity" FROM products
+JOIN products_to_orders AS pto ON products.id = pto.product_id
+GROUP BY model
+ORDER BY"modelQuantity" DESC
+LIMIT 10;
