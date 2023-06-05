@@ -68,3 +68,24 @@ SELECT customer_id FROM orders;
 SELECT id FROM users
 INTERSECT
 SELECT customer_id FROM orders;
+
+-- get all users email that made orders
+-- !!!! bad practice !!!! DO NOT DO LIKE THIS
+SELECT email FROM users
+WHERE id IN (SELECT id FROM users
+       INTERSECT
+       SELECT customer_id FROM orders);
+
+----
+
+SELECT  * FROM a, b
+WHERE a.v = b.v;
+
+----
+
+SELECT * FROM a
+WHERE a.v NOT IN (SELECT * FROM b);
+
+----
+
+SELECT * FROM users, orders;
