@@ -241,13 +241,34 @@ FROM users
          JOIN orders o on users.id = o.customer_id
 GROUP BY users.id;
 
+SELECT DISTINCT users.id, users.first_name, users.email
+FROM users
+         JOIN orders o on users.id = o.customer_id;
+
+--  all users that not made order
+
+SELECT users.id, users.first_name, users.email
+FROM users
+         LEFT JOIN orders o on users.id = o.customer_id
+WHERE o.customer_id IS NULL
+GROUP BY users.id;
 
 
+--- practice
+---email all users making order with product id = 7
+SELECT users.email, users.first_name
+FROM users
+         JOIN orders o on users.id = o.customer_id
+         JOIN products_to_orders pto on o.id = pto.order_id
+WHERE product_id = 7;
 
 
-
-
-
+SELECT users.email, users.first_name, o.customer_id, p.model, o.id, p.model
+FROM users
+         JOIN orders o on users.id = o.customer_id
+         JOIN products_to_orders pto on o.id = pto.order_id
+         JOIN products p on p.id = pto.product_id
+WHERE p.brand = 'Samsung';
 
 
 
