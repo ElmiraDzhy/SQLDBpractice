@@ -314,12 +314,54 @@ ORDER BY "popular" DESC
 LIMIT 1;
 
 
+-- practice part 2
+--6
+
+SELECT pto.order_id, sum(p.price * pto.quantity)
+FROM products_to_orders AS pto
+         JOIN products p on p.id = pto.product_id
+GROUP BY pto.order_id;
+
+--7
+SELECT avg(summa)
+FROM (SELECT pto.order_id, sum(p.price * pto.quantity) AS "summa"
+      FROM products_to_orders AS pto
+               JOIN products p on p.id = pto.product_id
+      GROUP BY pto.order_id) AS subtable;
+
+-- 8
+
+SELECT pto.order_id, sum(p.price * pto.quantity)
+FROM orders
+         JOIN products_to_orders pto on orders.id = pto.order_id
+         JOIN products p on p.id = pto.product_id
+GROUP BY pto.order_id
+HAVING sum(p.price * pto.quantity) > (SELECT avg(summa)
+                                      FROM (SELECT order_id, sum(p.price * pto.quantity) AS "summa"
+                                            FROM orders
+                                                     JOIN products_to_orders AS pto ON orders.id = pto.order_id
+                                                     JOIN products AS p ON p.id = pto.product_id
+                                            GROUP BY order_id) AS subtable);
+
+-- 9
+SELECT count(*) AS "user_orders", u.id AS "userID", u.email
+FROM users AS u
+         JOIN orders o on u.id = o.customer_id
+GROUP BY u.id
+HAVING count(*) > (SELECT avg("user_orders")
+                   FROM (SELECT count(*) AS "user_orders", u.id AS "userID"
+                         FROM users AS u
+                                  JOIN orders o on u.id = o.customer_id
+                         GROUP BY u.id) AS subtable);
 
 
-
-
-
-
-
+-- 10
+SELECT users.*, sum(p.price * pto.quantity)
+FROM users
+         JOIN orders o on users.id = o.customer_id
+         JOIN products_to_orders pto on o.id = pto.order_id
+         JOIN products p on p.id = pto.product_id
+GROUP BY users.id
+HAVING sum(p.price * pto.quantity) > 20000;
 
 
