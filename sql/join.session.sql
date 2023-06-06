@@ -275,5 +275,51 @@ WHERE p.brand = 'Samsung';
 SELECT users.id, users.email, users.first_name, count(o.id) AS "Order quantity"
 FROM users
          JOIN orders o on users.id = o.customer_id
-GROUP BY users.id ;
+GROUP BY users.id;
+
+--- practice
+--1
+SELECT sum(pto.quantity * p.price), pto.order_id
+FROM products_to_orders AS pto
+         JOIN products AS p ON pto.product_id = p.id
+GROUP BY pto.order_id;
+
+--2
+--order: 16027
+SELECT p.model, p.id
+FROM products AS p
+         JOIN products_to_orders AS pto ON p.id = pto.product_id
+WHERE pto.order_id = 16027;
+
+--3
+--order: 15430
+
+SELECT count(*) AS "Positions"
+FROM products_to_orders
+WHERE order_id = 15430;
+
+-- 4
+SELECT u.id, u.first_name, u.email, sum(pto.quantity)
+FROM users AS u
+         JOIN orders o on u.id = o.customer_id
+         JOIN products_to_orders pto on o.id = pto.order_id
+GROUP BY u.id;
+
+--5
+SELECT products.model, sum(pto.quantity) AS "popular"
+FROM products
+         JOIN products_to_orders pto on products.id = pto.product_id
+GROUP BY products.model
+ORDER BY "popular" DESC
+LIMIT 1;
+
+
+
+
+
+
+
+
+
+
 
