@@ -208,15 +208,46 @@ ORDER BY price DESC
 LIMIT 10;
 
 -- 9
-SELECT u.id, u.first_name, count(o.customer_id) AS "ordersQuantity" FROM orders AS o
-JOIN users AS u ON u.id = o.customer_id
+SELECT u.id, u.first_name, count(o.customer_id) AS "ordersQuantity"
+FROM orders AS o
+         JOIN users AS u ON u.id = o.customer_id
 GROUP BY u.id
 ORDER BY "ordersQuantity";
 
 -- 10
 
-SELECT model, count(model) AS "modelQuantity" FROM products
-JOIN products_to_orders AS pto ON products.id = pto.product_id
+SELECT model, count(model) AS "modelQuantity"
+FROM products
+         JOIN products_to_orders AS pto ON products.id = pto.product_id
 GROUP BY model
-ORDER BY"modelQuantity" DESC
+ORDER BY "modelQuantity" DESC
 LIMIT 10;
+
+
+---------------------------------------------------------------------------------
+/*
+products that no one bought
+*/
+SELECT p.id, p.model, p.brand, pto.order_id
+FROM products AS p
+         LEFT JOIN products_to_orders pto on p.id = pto.product_id
+WHERE order_id IS NULL;
+
+
+-- all users that made order
+
+SELECT users.id, users.first_name, users.email
+FROM users
+         JOIN orders o on users.id = o.customer_id
+GROUP BY users.id;
+
+
+
+
+
+
+
+
+
+
+
