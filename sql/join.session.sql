@@ -270,5 +270,10 @@ FROM users
          JOIN products p on p.id = pto.product_id
 WHERE p.brand = 'Samsung';
 
+-- task #3
 
+SELECT users.id, users.email, users.first_name, count(o.id) AS "Order quantity"
+FROM users
+         JOIN orders o on users.id = o.customer_id
+GROUP BY users.id ;
 
