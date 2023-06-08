@@ -183,3 +183,79 @@ VALUES (1, 1),
 Single source of truth
 Need to store primary facts in tables that we cannot know from other facts
 */
+
+-- 4NF
+
+-- NOT IN 4NF
+--      ||
+--      \/
+
+/*
+EXAMPLE
+
+restaurants
+pizzas
+deliveries
+
+В сети много ресторанов в разных частях города
+Рестораны обращаются к тем службам доставки кооторые
+работают в тех самых районах где и ресторан
+Службы доставки могут работать в нескольких районах одновременно
+
+*/
+
+CREATE TABLE restaurants
+(
+    id serial PRIMARY KEY
+);
+
+CREATE TABLE deliveries
+(
+    id serial PRIMARY KEY
+);
+
+CREATE TABLE restaurants_to_deliveries
+(
+    restaurant_id int REFERENCES restaurants (id),
+    delivery_id   int REFERENCES deliveries (id),
+    pizza_type    varchar(300) NOT NULL,
+    PRIMARY KEY (restaurant_id, delivery_id)
+);
+
+INSERT INTO restaurants_to_deliveries
+VALUES (1, 1, 'pepperoni'),
+       (1, 1, 'sea'),
+       (1, 1, '4chease'),
+       (1, 1, 'hawaii'),
+       (1, 2, 'pepperoni'),
+       (1, 2, 'sea'),
+       (1, 2, 'hawaii'),
+       (2, 1, 'pepperoni'),
+       (2, 1, 'sea'),
+       (2, 1, 'special'),
+       (2, 3, 'pepperoni'),
+       (2, 3, 'special');
+-----<----- something wrong here
+
+--
+-- DO IT RIGHT:
+--
+
+CREATE TABLE pizzas
+(
+    name varchar(300) PRIMARY KEY
+);
+
+CREATE TABLE restaurants_to_pizzas
+(
+    restaurant_id int REFERENCES restaurants,
+    pizza_type    varchar(300) REFERENCES pizzas (name),
+    PRIMARY KEY (restaurant_id, pizza_type)
+);
+
+CREATE TABLE restaurants_to_deliveries
+(
+    restaurant_id int REFERENCES restaurants (id),
+    delivery_id   int REFERENCES deliveries (id),
+    PRIMARY KEY (restaurant_id, delivery_id)
+);
