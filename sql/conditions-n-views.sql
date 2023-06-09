@@ -97,3 +97,28 @@ FROM users
          LEFT JOIN orders o on users.id = o.customer_id
 GROUP BY users.id
 ORDER BY users.id;
+
+
+----- COALESCE, NULLIF, GREATEST and LIST
+
+SELECT COALESCE(NULL, 12, 24);
+
+SELECT users.*, COALESCE(weight, NULL) AS "users_weight"
+FROM users;
+
+------
+
+SELECT NULLIF(12, 13);
+
+------
+
+SELECT GREATEST(12, 13, 78, 67, 2, 3, 45);
+
+------
+
+SELECT LEAST(12, 13, 78, 67, 2, 3, 45);
+
+-- get price -> if price < 2000 return 2000
+
+SELECT id, brand, model, GREATEST(price, 2000) as price
+FROM products;
