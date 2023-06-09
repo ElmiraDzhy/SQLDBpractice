@@ -151,11 +151,37 @@ ALTER TABLE orders
 -- if column status had default value- that we could not  cast it
 -- we need to crash default and after this casting type and adding new default
 
-UPDATE orders SET status = 'processing'
+UPDATE orders
+SET status = 'processing'
 WHERE customer_id BETWEEN 700 and 800;
 
-INSERT INTO orders (customer_id, status) VALUES (678, 'new');
+INSERT INTO orders (customer_id, status)
+VALUES (678, 'new');
 
 --
 
-ALTER TABLE orders  ALTER COLUMN status SET DEFAULT 'new';
+ALTER TABLE orders
+    ALTER COLUMN status SET DEFAULT 'new';
+
+
+------------------ VIEWS -----------------
+
+SELECT u.*, count(o.id)
+FROM users AS u
+         JOIN orders o on u.id = o.customer_id
+GROUP BY u.id;
+
+-- if we want to save this table
+-- CREATE VIEW
+
+CREATE VIEW users_with_orders_amounts AS
+(
+SELECT u.*, count(o.id)
+FROM users AS u
+         JOIN orders o on u.id = o.customer_id
+GROUP BY u.id);
+
+
+SELECT * FROM users_with_orders_amounts AS uwoa
+         JOIN orders AS o ON uwoa.id = o.customer_id
+WHERE o.id = 15432;
