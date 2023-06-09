@@ -83,3 +83,17 @@ SELECT*,
            ELSE 'low'
           END) AS "class"
 FROM products;
+
+
+
+SELECT users.*,
+       count(o.id) AS "orders_quantity",
+       (CASE
+            WHEN count(o.id) > 3 THEN 'often'
+            WHEN count(o.id) >= 1 THEN 'regular'
+            WHEN count(o.id) = 0 THEN 'new'
+           END)    AS "client_status"
+FROM users
+         LEFT JOIN orders o on users.id = o.customer_id
+GROUP BY users.id
+ORDER BY users.id;
