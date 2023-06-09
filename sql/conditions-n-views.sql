@@ -56,7 +56,30 @@ SELECT id,
        first_name,
        birthday,
        (CASE extract(years from age(birthday)) < 21
-           WHEN true THEN false
-           WHEN false THEN true
+            WHEN true THEN false
+            WHEN false THEN true
            END) AS adult
 FROM users;
+
+SELECT *,
+       (CASE
+            WHEN brand ILIKE 'Iphone'
+                THEN 'Apple'
+            ELSE 'other'
+           END) as manufacturer
+FROM products;
+
+SELECT*,
+      (CASE
+           WHEN price < 7000 THEN 'budget'
+           WHEN price > 14000 THEN 'flagman'
+           WHEN price BETWEEN 7000 AND 14000 THEN 'middle class'
+           ELSE 'unknown'
+          END) AS "class"
+FROM products;
+SELECT*,
+      (CASE
+           WHEN price > (SELECT avg(price) FROM products) THEN 'expensive'
+           ELSE 'low'
+          END) AS "class"
+FROM products;
