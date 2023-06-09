@@ -182,6 +182,22 @@ FROM users AS u
 GROUP BY u.id);
 
 
-SELECT * FROM users_with_orders_amounts AS uwoa
+SELECT *
+FROM users_with_orders_amounts AS uwoa
          JOIN orders AS o ON uwoa.id = o.customer_id
 WHERE o.id = 15432;
+
+
+CREATE VIEW orders_with_prices AS
+(
+SELECT o.*, sum(p.price * pto.quantity)
+FROM orders AS o
+         JOIN products_to_orders AS pto ON o.id = pto.order_id
+         JOIN products AS p ON p.id = pto.product_id
+GROUP BY o.id
+    );
+
+SELECT * FROM orders_with_prices;
+
+
+
