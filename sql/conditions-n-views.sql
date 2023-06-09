@@ -197,7 +197,46 @@ FROM orders AS o
 GROUP BY o.id
     );
 
-SELECT * FROM orders_with_prices;
+SELECT *
+FROM orders_with_prices;
 
 
+SELECT *
+FROM orders_with_prices
+WHERE sum > (SELECT avg(sum)
+             FROM orders_with_prices);
 
+-- Homework
+
+/*
+top-10 actual phones
+top-10 expensive phones
+top-5 users that make most expensive orders
+*/
+
+CREATE VIEW top_popular_phones AS
+(
+SELECT p.*, sum(pto.quantity) AS "popularity"
+FROM products AS p
+         JOIN products_to_orders pto on p.id = pto.product_id
+GROUP BY p.id
+ORDER BY popularity DESC
+LIMIT 10 );
+
+CREATE VIEW top_expensive_phones AS
+(
+SELECT *
+FROM products
+ORDER BY price DESC
+LIMIT 5 );
+
+CREATE VIEW top_client AS
+(
+SELECT u.*, sum(p.price * pto.quantity) AS "all_user's_orders_price"
+FROM users AS u
+         JOIN orders o on u.id = o.customer_id
+         JOIN products_to_orders pto on o.id = pto.order_id
+         JOIN products p on p.id = pto.product_id
+GROUP BY u.id
+ORDER BY "all_user's_orders_price" DESC
+LIMIT 5);
