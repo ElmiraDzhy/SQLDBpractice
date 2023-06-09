@@ -122,3 +122,40 @@ SELECT LEAST(12, 13, 78, 67, 2, 3, 45);
 
 SELECT id, brand, model, GREATEST(price, 2000) as price
 FROM products;
+
+
+-- ENUM
+
+-- create data type (db level)
+CREATE TYPE order_status AS ENUM ('new', 'processing', 'delivery', 'done');
+
+ALTER TABLE orders
+    RENAME COLUMN is_done TO status; -- rename column
+
+ALTER TABLE orders
+    ALTER COLUMN status TYPE order_status;
+-- if into column status has not data, this command successfully change data type
+-- but we already have data into this column
+
+
+ALTER TABLE orders
+    ALTER COLUMN status
+        TYPE order_status USING (
+        CASE status
+            WHEN false THEN 'new'
+            WHEN true THEN 'done'
+            ELSE 'processing'
+            END
+        )::order_status;
+
+-- if column status had default value- that we could not  cast it
+-- we need to crash default and after this casting type and adding new default
+
+UPDATE orders SET status = 'processing'
+WHERE customer_id BETWEEN 700 and 800;
+
+INSERT INTO orders (customer_id, status) VALUES (678, 'new');
+
+--
+
+ALTER TABLE orders  ALTER COLUMN status SET DEFAULT 'new';
