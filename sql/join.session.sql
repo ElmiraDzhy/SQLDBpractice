@@ -342,6 +342,17 @@ HAVING sum(p.price * pto.quantity) > (SELECT avg(summa)
                                                      JOIN products_to_orders AS pto ON orders.id = pto.order_id
                                                      JOIN products AS p ON p.id = pto.product_id
                                             GROUP BY order_id) AS subtable);
+---refactor via WITH
+--- WITH <table_alias> AS <sub-query than return table> SELECT ...can use table
+
+WITH "orders_with_costs" AS (SELECT order_id, sum(p.price * pto.quantity) AS "summa"
+                             FROM orders
+                                      JOIN products_to_orders AS pto ON orders.id = pto.order_id
+                                      JOIN products AS p ON p.id = pto.product_id
+                             GROUP BY order_id)
+SELECT owc.*
+FROM orders_with_costs AS owc
+WHERE summa > (SELECT avg(owc.summa) FROM orders_with_costs GROUP BY order_id);
 
 -- 9
 SELECT count(*) AS "user_orders", u.id AS "userID", u.email
@@ -365,3 +376,13 @@ GROUP BY users.id
 HAVING sum(p.price * pto.quantity) > 20000;
 
 
+
+SELECT p.*, COALESCE(sum(pto.quantity), 0)
+FROM products p
+         LEFT JOIN products_to_orders pto ON p.id = pto.product_id
+GROUP BY p.id;
+
+SELECT users.*, count(o.id)
+FROM users
+         LEFT JOIN orders o on users.id = o.customer_id
+GROUP BY users.id;
